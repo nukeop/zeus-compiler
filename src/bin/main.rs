@@ -14,5 +14,9 @@ fn main() {
     info!("Target file: {}", target);
 
     let mut source = SourceFile::new();
-    source.load(target.to_string());
+    source.load(target.to_string()).unwrap();
+
+    let line = &source.lines.unwrap()[0];
+    println!("{}", line.op);
+    println!("{:?}", line.args);
 }
