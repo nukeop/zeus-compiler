@@ -21,7 +21,8 @@ impl Line {
         match name {
             "COPY" => {
                 result.push(self.op.opcode);
-                result.push(self.op.opcode);
+                //result.push(self.args[0]);
+                //result.push(self.args[1]);
                 
             },
             "ADDX" => result.push(self.op.opcode),
