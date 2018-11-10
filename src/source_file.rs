@@ -3,14 +3,34 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::File;
 
+use ops::Op;
+
 pub struct Line {
-    pub op: String,
+    pub op: Op,
     pub args: Vec<String>
 }
 
 impl Line {
     pub fn new(op: String, args: Vec<String>) -> Line {
-        Line { op, args }
+        Line { op: Op::from_string(&op), args }
+    }
+
+    pub fn to_compiled(&mut self) -> Result<Vec<u8>, String> {
+        let mut result = vec!();
+        let name: &str = &self.op.name;
+        match name {
+            "COPY" => {
+                result.push(self.op.opcode);
+                result.push(self.op.opcode);
+                
+            },
+            "ADDX" => result.push(self.op.opcode),
+            "WAIT" => result.push(self.op.opcode),
+            _ => result.push(0x00)
+                
+        }
+
+        Ok(result)
     }
 }
 
