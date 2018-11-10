@@ -4,7 +4,7 @@ Main project here: https://github.com/nukeop/zeus
 
 ## Getting started
 
-### Building
+`### Building
 
 ```shell
 $ cargo build
@@ -13,7 +13,7 @@ $ cargo build
 ### Running
 
 ```shell
-$ RUST_LOG=main=info,zeus_compiler=info cargo run -- --target program.z
+$ env RUST_LOG=main=info,zeus_compiler=info cargo run -- --source program.zeus --target compiled.zeus
 ```
 
 ### Testing
