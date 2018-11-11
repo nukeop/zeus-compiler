@@ -4,6 +4,7 @@ use std::io::BufReader;
 use std::fs::File;
 
 use ops::Op;
+use util::ByteVec;
 
 pub struct Line {
     pub op: Op,
@@ -21,11 +22,16 @@ impl Line {
         match name {
             "COPY" => {
                 result.push(self.op.opcode);
-                //result.push(self.args[0]);
-                //result.push(self.args[1]);
-                
+                result.push(self.args[0].parse::<u8>().unwrap());
+
+                let arg_bytes = self.args[1].parse::<u16>().unwrap().as_u8_vec();
+                result.push(arg_bytes[0]);
+                result.push(arg_bytes[1]);
             },
-            "ADDX" => result.push(self.op.opcode),
+            "ADDX" => {
+                result.push(self.op.opcode);
+                result.push(self.args[0].parse::<u8>().unwrap());
+            },
             "WAIT" => result.push(self.op.opcode),
             _ => result.push(0x00)
                 

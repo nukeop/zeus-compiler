@@ -10,6 +10,7 @@ impl Op {
             "ADDY" => 0x0C,
             "ADDT" => 0x0D,
             "COPY" => 0x11,
+            "CPID" => 0x12,
             "WAIT" => 0x29,
             _ => 0x00
         };
