@@ -4,7 +4,7 @@ Main project here: https://github.com/nukeop/zeus
 
 ## Getting started
 
-`### Building
+### Building
 
 ```shell
 $ cargo build
