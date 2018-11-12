@@ -18,25 +18,56 @@ impl Line {
 
     pub fn to_compiled(&mut self) -> Result<Vec<u8>, String> {
         let mut result = vec!();
-        let name: &str = &self.op.name;
+        let name: &str = &self.op.name.to_owned();
+        
         match name {
-            "COPY" => {
+            "MVIT" => {
                 result.push(self.op.opcode);
                 result.push(self.args[0].parse::<u8>().unwrap());
-
-                let arg_bytes = self.args[1].parse::<u16>().unwrap().as_u8_vec();
-                result.push(arg_bytes[0]);
-                result.push(arg_bytes[1]);
+            },
+            "COPY" => {
+                let compiled = self.compile_copy().unwrap();
+                for byte in compiled {
+                    result.push(byte);
+                }
             },
             "ADDX" => {
                 result.push(self.op.opcode);
                 result.push(self.args[0].parse::<u8>().unwrap());
             },
+            "FJMP" => {
+                let compiled = self.compile_fjmp().unwrap();
+                for byte in compiled {
+                    result.push(byte);
+                }
+            },
             "WAIT" => result.push(self.op.opcode),
             _ => result.push(0x00)
-                
         }
 
+        
+
+        Ok(result)
+    }
+
+    pub fn compile_copy(&mut self) -> Result<Vec<u8>, String> {
+        let mut result = vec!();
+        result.push(self.op.opcode);
+
+        let arg = self.args[0].parse::<u8>().unwrap();
+        result.push(arg);
+
+        let addr = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
+        result.extend(addr);
+        
+        Ok(result)
+    }
+
+    pub fn compile_fjmp(&mut self) -> Result<Vec<u8>, String> {
+        let mut result = vec!();
+        result.push(self.op.opcode);
+        result.extend(self.args[0].parse::<u16>().unwrap().as_u8_vec());
+        
         Ok(result)
     }
 }
