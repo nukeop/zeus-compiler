@@ -29,7 +29,7 @@ impl Line {
 
     pub fn compile_two_addr(&mut self, bytes: &mut Vec<u8>) {
         bytes.push(self.op.opcode);
-        let addr1 = u16::from_str_radix(&self.args[2], 16).unwrap().as_u8_vec();
+        let addr1 = u16::from_str_radix(&self.args[0], 16).unwrap().as_u8_vec();
         let addr2 = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
         bytes.extend(addr1);
         bytes.extend(addr2);
@@ -44,7 +44,9 @@ impl Line {
             "MVIT" => self.compile_single_byte_arg(&mut result),
             "COPY" => result.extend(self.compile_copy().unwrap()),
             "CPIR" => self.compile_two_addr(&mut result),
+            "CPID" => self.compile_two_addr(&mut result),
             "ADDX" => self.compile_single_byte_arg(&mut result),
+            "NEGI" => self.compile_two_addr(&mut result),
             "FJMP" => self.compile_two_bytes_arg(&mut result),
             "WAIT" => result.push(self.op.opcode),
             _ => panic!("Unknown instruction: {}", name)
@@ -90,13 +92,21 @@ impl SourceFile {
         let mut contents = String::new();
         buf_reader.read_to_string(&mut contents).expect("Could not
         read source file");
-        let lines = contents.split("\n");
+        let lines: Vec<&str> = contents.split("\n").collect();
 
-        self.lines = Some(lines.map(|s| {
-            let mut tokens = s.split(" ");
+        let mut lines_parsed = vec!();
+        for line in lines {
+            let mut tokens = line.split(" ");
             let op = tokens.next().unwrap().to_string();
-            Line::new(op, tokens.map(|s| s.to_string()).collect())
-        }).collect());
+
+            if (op == "") {
+                continue;
+            }
+
+            lines_parsed.push(Line::new(op, tokens.map(|s| s.to_string()).collect()));
+        }
+        self.lines = Some(lines_parsed);
+        
         Ok(())
     }
 }
