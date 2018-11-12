@@ -23,7 +23,7 @@ impl Line {
 
     pub fn compile_two_bytes_arg(&mut self, bytes: &mut Vec<u8>) {
         bytes.push(self.op.opcode);
-        let addr = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
+        let addr = u16::from_str_radix(&self.args[0], 16).unwrap().as_u8_vec();
         bytes.extend(addr);
     }
 
@@ -42,13 +42,18 @@ impl Line {
         match name {
             "MVIY" => self.compile_single_byte_arg(&mut result),
             "MVIT" => self.compile_single_byte_arg(&mut result),
+            "MVYA" => self.compile_two_bytes_arg(&mut result),
             "COPY" => result.extend(self.compile_copy().unwrap()),
             "CPIR" => self.compile_two_addr(&mut result),
             "CPID" => self.compile_two_addr(&mut result),
             "ADDX" => self.compile_single_byte_arg(&mut result),
+            "ADDY" => self.compile_single_byte_arg(&mut result),
             "NEGI" => self.compile_two_addr(&mut result),
+            "EQLS" => self.compile_two_addr(&mut result),
+            "JUMP" => self.compile_two_bytes_arg(&mut result),
             "FJMP" => self.compile_two_bytes_arg(&mut result),
             "WAIT" => result.push(self.op.opcode),
+            "CLRS" => {},
             _ => panic!("Unknown instruction: {}", name)
         }
 

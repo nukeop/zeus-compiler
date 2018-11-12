@@ -16,11 +16,13 @@ impl Op {
             "COPY" => 0x11,
             "CPID" => 0x12,
             "CPIR" => 0x13,
+            "NEGI" => 0x1D,
             "EQLS" => 0x20,
+            "JUMP" => 0x23,
             "FJMP" => 0x25,
             "WAIT" => 0x29,
             "CLRS" => 0x2A,
-            _ => 0x00
+            _ => panic!("Unknown instruction: {}", name)
         };
 
         Op { name: name.to_string(), opcode }
