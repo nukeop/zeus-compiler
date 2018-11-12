@@ -3,8 +3,7 @@ extern crate log;
 extern crate pretty_env_logger;
 extern crate zeus_compiler;
 use zeus_compiler::init::read_args;
-use zeus_compiler::ops::Op;
-use zeus_compiler::program::Program;
+use zeus_compiler::program::{Program, Version};
 use zeus_compiler::source_file::SourceFile;
 
 fn main() {
@@ -22,7 +21,8 @@ fn main() {
     let mut source = SourceFile::new();
     source.load(source_file.to_string()).unwrap();
 
-    let mut program = Program::new();
+    let version = Version::new(0, 1, 0);
+    let mut program = Program::new(version);
     let lines = source.lines.unwrap();
     for mut line in lines {
         let compiled = line.to_compiled().unwrap(); 
