@@ -16,33 +16,38 @@ impl Line {
         Line { op: Op::from_string(&op), args }
     }
 
+    pub fn compile_single_byte_arg(&mut self, bytes: &mut Vec<u8>) {
+        bytes.push(self.op.opcode);
+        bytes.push(self.args[0].parse::<u8>().unwrap());
+    }
+
+    pub fn compile_two_bytes_arg(&mut self, bytes: &mut Vec<u8>) {
+        bytes.push(self.op.opcode);
+        let addr = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
+        bytes.extend(addr);
+    }
+
+    pub fn compile_two_addr(&mut self, bytes: &mut Vec<u8>) {
+        bytes.push(self.op.opcode);
+        let addr1 = u16::from_str_radix(&self.args[2], 16).unwrap().as_u8_vec();
+        let addr2 = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
+        bytes.extend(addr1);
+        bytes.extend(addr2);
+    }
+
     pub fn to_compiled(&mut self) -> Result<Vec<u8>, String> {
         let mut result = vec!();
         let name: &str = &self.op.name.to_owned();
         
         match name {
-            "MVIT" => {
-                result.push(self.op.opcode);
-                result.push(self.args[0].parse::<u8>().unwrap());
-            },
-            "COPY" => {
-                let compiled = self.compile_copy().unwrap();
-                for byte in compiled {
-                    result.push(byte);
-                }
-            },
-            "ADDX" => {
-                result.push(self.op.opcode);
-                result.push(self.args[0].parse::<u8>().unwrap());
-            },
-            "FJMP" => {
-                let compiled = self.compile_fjmp().unwrap();
-                for byte in compiled {
-                    result.push(byte);
-                }
-            },
+            "MVIY" => self.compile_single_byte_arg(&mut result),
+            "MVIT" => self.compile_single_byte_arg(&mut result),
+            "COPY" => result.extend(self.compile_copy().unwrap()),
+            "CPIR" => self.compile_two_addr(&mut result),
+            "ADDX" => self.compile_single_byte_arg(&mut result),
+            "FJMP" => self.compile_two_bytes_arg(&mut result),
             "WAIT" => result.push(self.op.opcode),
-            _ => result.push(0x00)
+            _ => panic!("Unknown instruction: {}", name)
         }
 
         
@@ -59,14 +64,6 @@ impl Line {
 
         let addr = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
         result.extend(addr);
-        
-        Ok(result)
-    }
-
-    pub fn compile_fjmp(&mut self) -> Result<Vec<u8>, String> {
-        let mut result = vec!();
-        result.push(self.op.opcode);
-        result.extend(self.args[0].parse::<u16>().unwrap().as_u8_vec());
         
         Ok(result)
     }
