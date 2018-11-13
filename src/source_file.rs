@@ -53,7 +53,7 @@ impl Line {
             "JUMP" => self.compile_two_bytes_arg(&mut result),
             "FJMP" => self.compile_two_bytes_arg(&mut result),
             "WAIT" => result.push(self.op.opcode),
-            "CLRS" => {},
+            "CLRS" => result.push(self.op.opcode),
             _ => panic!("Unknown instruction: {}", name)
         }
 
