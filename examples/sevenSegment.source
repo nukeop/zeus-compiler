@@ -1,0 +1,24 @@
+# Seven Segment Display demo
+# Increments the bytes controlling the seven segment LCDs
+
+MVIY 41
+MVIX 0
+MVXA 3000
+CPID 3000 0000
+MVYA 0301
+COPY 1 0302
+ADDI 0301 0302 0301
+MVAY 0301
+COPY 55 0303
+EQLS 0303 0301
+FJMP 2004
+
+WAIT
+WAIT
+WAIT
+WAIT
+
+ADDX 1
+MVIY 41
+MVIT 0
+JUMP 2004
