@@ -1,3 +1,6 @@
+# Zeus Intro program
+# Displays a blinking picture
+
 COPY 112 0000
 COPY 80 0002
 COPY 119 0004

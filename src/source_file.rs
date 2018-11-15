@@ -104,7 +104,7 @@ impl SourceFile {
             let mut tokens = line.split(" ");
             let op = tokens.next().unwrap().to_string();
 
-            if (op == "") {
+            if (op == "" || op.starts_with("#")) {
                 continue;
             }
 
