@@ -27,12 +27,14 @@ impl Line {
         bytes.extend(addr);
     }
 
-    pub fn compile_two_addr(&mut self, bytes: &mut Vec<u8>) {
+    pub fn compile_n_addr(&mut self, addr_num: usize, bytes: &mut Vec<u8>) {
         bytes.push(self.op.opcode);
-        let addr1 = u16::from_str_radix(&self.args[0], 16).unwrap().as_u8_vec();
-        let addr2 = u16::from_str_radix(&self.args[1], 16).unwrap().as_u8_vec();
-        bytes.extend(addr1);
-        bytes.extend(addr2);
+        let addresses: Vec<u16> = vec!();
+
+        for n in 0..addr_num {
+            let addr = u16::from_str_radix(&self.args[n], 16).unwrap().as_u8_vec();
+            bytes.extend(addr);
+        }
     }
 
     pub fn to_compiled(&mut self) -> Result<Vec<u8>, String> {
@@ -40,16 +42,20 @@ impl Line {
         let name: &str = &self.op.name.to_owned();
         
         match name {
+            "MVIX" => self.compile_single_byte_arg(&mut result),
             "MVIY" => self.compile_single_byte_arg(&mut result),
             "MVIT" => self.compile_single_byte_arg(&mut result),
+            "MVAY" => self.compile_n_addr(1, &mut result),
+            "MVXA" => self.compile_two_bytes_arg(&mut result),
             "MVYA" => self.compile_two_bytes_arg(&mut result),
             "COPY" => result.extend(self.compile_copy().unwrap()),
-            "CPIR" => self.compile_two_addr(&mut result),
-            "CPID" => self.compile_two_addr(&mut result),
+            "CPID" => self.compile_n_addr(2, &mut result),
+            "CPIR" => self.compile_n_addr(2, &mut result),
+            "ADDI" => self.compile_n_addr(3, &mut result),
             "ADDX" => self.compile_single_byte_arg(&mut result),
             "ADDY" => self.compile_single_byte_arg(&mut result),
-            "NEGI" => self.compile_two_addr(&mut result),
-            "EQLS" => self.compile_two_addr(&mut result),
+            "NEGI" => self.compile_n_addr(2, &mut result),
+            "EQLS" => self.compile_n_addr(2, &mut result),
             "JUMP" => self.compile_two_bytes_arg(&mut result),
             "FJMP" => self.compile_two_bytes_arg(&mut result),
             "WAIT" => result.push(self.op.opcode),
