@@ -11,3 +11,18 @@ matrix:
     - rust: nightly
 
 cache: cargo
+
+before_deploy:
+  - cargo build --release
+  - cp target/release/main zeus-compiler
+  - tar czvf zeus-compiler-linux.tar.gz zeus-compiler
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file:
+    - zeus-compiler-linux.tar.gz
+  on:
+    branch: master
+    tags: true
+  skip_cleanup: true

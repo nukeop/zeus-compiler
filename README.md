@@ -10,6 +10,12 @@ Main project here: https://github.com/nukeop/zeus
 $ cargo build
 ```
 
+Release:
+
+```shell
+$ cargo build --release
+```
+
 ### Running
 
 ```shell
