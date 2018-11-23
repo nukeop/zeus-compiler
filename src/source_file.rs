@@ -58,12 +58,11 @@ impl Line {
             "EQLS" => self.compile_n_addr(2, &mut result),
             "JUMP" => self.compile_two_bytes_arg(&mut result),
             "FJMP" => self.compile_two_bytes_arg(&mut result),
+            "IJMP" => self.compile_two_bytes_arg(&mut result),
             "WAIT" => result.push(self.op.opcode),
             "CLRS" => result.push(self.op.opcode),
             _ => panic!("Unknown instruction: {}", name)
-        }
-
-        
+        }     
 
         Ok(result)
     }

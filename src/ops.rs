@@ -23,8 +23,9 @@ impl Op {
             "EQLS" => 0x20,
             "JUMP" => 0x23,
             "FJMP" => 0x25,
-            "WAIT" => 0x29,
-            "CLRS" => 0x2A,
+            "IJMP" => 0x27,
+            "WAIT" => 0x2A,
+            "CLRS" => 0x2B,
             _ => panic!("Unknown instruction: {}", name)
         };
 
