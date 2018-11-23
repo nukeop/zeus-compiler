@@ -1,4 +1,4 @@
-# zeus-compiler
+# zeus-compiler ![Travis (.org)](https://img.shields.io/travis/nukeop/zeus-compiler.svg)
 Compiler for the zeus entertainment system assembly language.
 Main project here: https://github.com/nukeop/zeus
 
