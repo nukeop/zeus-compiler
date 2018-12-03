@@ -76,7 +76,7 @@ impl Line {
             "SUBY" => self.compile_single_byte_arg(&mut result),
             "SUBT" => self.compile_single_byte_arg(&mut result),
             
-            "COPY" => result.extend(self.compile_copy().unwrap()),
+            "COPY" => result.extend(self.compile_u8_u16().unwrap()),
             "CPID" => self.compile_n_addr(2, &mut result),
             "CPIR" => self.compile_n_addr(2, &mut result),
             
