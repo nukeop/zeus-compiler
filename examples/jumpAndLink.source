@@ -1,0 +1,48 @@
+# Example illustrating the jump-and-link mechanism that can be used to create reusable functions
+
+
+# Create a lookup table at 0x0100 mapping columns to bit values
+# This tells us what value to use to draw a pixel in this column
+COPY 128 0100
+COPY 64 0101
+COPY 32 0102
+COPY 16 0103
+COPY 8 0104
+COPY 4 0105
+COPY 2 0106
+COPY 1 0107
+COPY 128 0108
+COPY 64 0109
+COPY 32 010A
+COPY 16 010B
+COPY 8 010C
+COPY 4 010D
+COPY 2 010E
+COPY 1 010F
+
+# Function call - draw a pixel at 2,2
+# First, store arguments in X and Y
+MVIX 2
+MVIY 2
+
+# Store the current program counter at the last address, then add 9 to it, so we end up at the next instruction when we come back
+COPY 9 1FFC
+MVPA 1FFD
+ADDI 1FFD 1FFC 1FFD
+
+# Jump to function
+# The return address is stored at 0x1FFD
+JUMP 205C
+
+#After the function finishes execution, we arrive here
+WAIT
+WAIT
+WAIT
+WAIT
+
+# Go back to beginning
+JUMP 2000
+
+# Draw a pixel at X,Y (arguments stored in registers)
+MVXA 0040
+IJMP 1FFD

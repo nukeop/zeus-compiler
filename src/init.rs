@@ -3,7 +3,7 @@ use clap::{App,Arg, ArgMatches};
 
 pub fn read_args<'a>() -> ArgMatches<'a> {
     App::new("zeus-compiler")
-        .version("0.1.0")
+        .version("0.3.0")
         .about("Compiler for the Zeus entertainment system assembly language")
         .author("nukeop <nukeop@gumblert.tech>")
         .arg(Arg::with_name("source")
