@@ -42,6 +42,13 @@ impl Token {
 
         Token::Invalid(value.to_string())
     }
+
+    pub fn is_label(&self) -> bool {
+        if let Token::Label(_) = self {
+            return true
+        }
+        false
+    }
 }
 
 impl fmt::Display for Token {

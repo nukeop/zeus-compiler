@@ -8,7 +8,8 @@ use token::Token;
 pub struct SourceFile {
     path: Option<String>,
     pub content: Option<String>,
-    pub tokens: Option<Vec<Token>>
+    pub labels: Vec<String>,
+    pub tokens: Vec<Token>
 }
 
 impl SourceFile {
@@ -16,7 +17,8 @@ impl SourceFile {
         SourceFile {
             path: None,
             content: None,
-            tokens: None
+            labels: vec![],
+            tokens: vec![]
         }
     }
 
@@ -35,21 +37,16 @@ impl SourceFile {
     pub fn tokenize(&mut self) -> Result<(), String> {
         let lines: Vec<&str> = self.content.as_ref().unwrap().split("\n").collect();
 
-        let mut tokens = vec![];
-        let mut labels = vec![];
-
         for line in lines {
             let mut line_tokens = line.split(" ");
             for value in line_tokens {
-                let parsed_token = Token::from_value(value, &labels);
-                tokens.push(parsed_token);
-
-                if let Token::Label(label) = parsed_token {
-                    labels.push(label.to_string())
+                let parsed_token = Token::from_value(value, &self.labels);
+                if let Token::Label(_) = parsed_token {
+                    self.labels.push(value.to_string().replace(":", ""))
                 }
+                self.tokens.push(parsed_token);
             }
         }
-        self.tokens = Some(tokens);
 
         Ok(())
     }

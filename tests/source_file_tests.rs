@@ -22,7 +22,7 @@ mod source_file_tests {
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(
-            sf.tokens.unwrap(),
+            sf.tokens,
             vec![Token::Instruction(Instruction::NOOP)]
         );
     }
@@ -34,7 +34,7 @@ mod source_file_tests {
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(
-            sf.tokens.unwrap(),
+            sf.tokens,
             vec![
             Token::Instruction(Instruction::MVIX),
             Token::Argument(15)
@@ -49,7 +49,7 @@ mod source_file_tests {
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(
-            sf.tokens.unwrap(),
+            sf.tokens,
             vec![
             Token::Instruction(Instruction::COPY),
             Token::Argument(15),
@@ -65,7 +65,7 @@ mod source_file_tests {
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(
-            sf.tokens.unwrap(),
+            sf.tokens,
             vec![Token::Label("start".to_string())]
         );
     }
@@ -73,12 +73,13 @@ mod source_file_tests {
     #[test]
     fn tokenize_jump() {
         let mut sf: SourceFile = SourceFile::new();
-        sf.content = Some("JUMP start".to_string());
+        sf.content = Some("start:\nJUMP start".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(
-            sf.tokens.unwrap(),
+            sf.tokens,
             vec![
+            Token::Label("start".to_string()),
             Token::Instruction(Instruction::JUMP),
             Token::LabelArg("start".to_string())
             ]
