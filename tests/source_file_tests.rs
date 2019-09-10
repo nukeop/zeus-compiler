@@ -85,4 +85,33 @@ mod source_file_tests {
             ]
         );
     }
+
+    #[test]
+    fn tokenize_complex_source() {
+        let mut sf: SourceFile = SourceFile::new();
+        sf.content=Some("
+        begin:
+        MVIX 20
+        MVIY 50
+        Copy 1 1030
+        test:
+        cpid 1234 1236
+        ".to_string());
+        let result = sf.tokenize().unwrap();
+        assert_eq!(result, ());
+        assert_eq!(sf.tokens, vec![
+            Token::Label("begin".to_string()),
+            Token::Instruction(Instruction::MVIX),
+            Token::Argument(20),
+            Token::Instruction(Instruction::MVIY),
+            Token::Argument(50),
+            Token::Instruction(Instruction::COPY),
+            Token::Argument(1),
+            Token::Argument(1030),
+            Token::Label("test".to_string()),
+            Token::Instruction(Instruction::CPID),
+            Token::Argument(1234),
+            Token::Argument(1236)
+            ]);
+    }
 }
