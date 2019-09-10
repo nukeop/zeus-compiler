@@ -38,7 +38,11 @@ impl SourceFile {
         let lines: Vec<&str> = self.content.as_ref().unwrap().split("\n").collect();
 
         for line in lines {
-            let mut line_tokens = line.split(" ");
+            let mut line_tokens = line
+            .trim()
+            .split(" ")
+            .filter(|token| token.len() > 0);
+
             for value in line_tokens {
                 let parsed_token = Token::from_value(value, &self.labels);
                 if let Token::Label(_) = parsed_token {
