@@ -3,7 +3,7 @@ extern crate lazy_static;
 extern crate zeus_compiler;
 
 #[cfg(test)]
-mod source_file_tests {
+mod token_tests {
     use zeus_compiler::instruction::Instruction;
     use zeus_compiler::token::Token;
 
@@ -22,10 +22,10 @@ mod source_file_tests {
     }
 
     #[test]
-    fn create_token_label_instr() {
+    fn create_token_copy() {
         let labels = vec![];
-        let token = Token::from_value("LABEL", &labels);
-        assert_eq!(token, Token::Instruction(Instruction::LABEL));
+        let token = Token::from_value("COPY", &labels);
+        assert_eq!(token, Token::Instruction(Instruction::COPY));
     }
 
     #[test]
@@ -38,14 +38,14 @@ mod source_file_tests {
     #[test]
     fn create_token_arg_hex_u8() {
         let labels = vec![];
-        let token = Token::from_value("DE", &labels);
+        let token = Token::from_value("0xDE", &labels);
         assert_eq!(token, Token::Argument(222));
     }
 
     #[test]
     fn create_token_arg_hex_u16() {
         let labels = vec![];
-        let token = Token::from_value("DEAD", &labels);
+        let token = Token::from_value("0xDEAD", &labels);
         assert_eq!(token, Token::Argument(57005));
     }
 

@@ -17,13 +17,18 @@ impl Token {
             return Token::Instruction(instr);
         }
 
-        let argument = value.parse::<u16>();
-        if let Ok(parsed) = argument {
-            return Token::Argument(parsed);
+        if (value.to_string().starts_with("0x")) {
+            let argument_hex = u16::from_str_radix(
+                value.to_string().replace("0x", "").as_str(),
+                16
+            );
+            if let Ok(parsed) = argument_hex {
+                return Token::Argument(parsed);
+            }
         }
 
-        let argument_hex = u16::from_str_radix(value, 16);
-        if let Ok(parsed) = argument_hex {
+        let argument = value.parse::<u16>();
+        if let Ok(parsed) = argument {
             return Token::Argument(parsed);
         }
 

@@ -28,6 +28,18 @@ mod source_file_tests {
     }
 
     #[test]
+    fn tokenize_instruction_copy() {
+        let mut sf: SourceFile = SourceFile::new();
+        sf.content = Some("COPY".to_string());
+        let result = sf.tokenize().unwrap();
+        assert_eq!(result, ());
+        assert_eq!(
+            sf.tokens,
+            vec![Token::Instruction(Instruction::COPY)]
+        );
+    }
+
+    #[test]
     fn tokenize_instruction_with_argument() {
         let mut sf: SourceFile = SourceFile::new();
         sf.content = Some("MVIX 15".to_string());

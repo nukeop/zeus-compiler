@@ -45,10 +45,10 @@ pub enum Instruction {
     BANK,
     RAND,
     WAIT,
-    CLRS,
-    LABEL
+    CLRS
 }
 
+#[derive(Debug, PartialEq)]
 pub enum ArgType {
     None,
     U8,
@@ -56,8 +56,7 @@ pub enum ArgType {
     U8U16,
     U8U8U16,
     U16U16,
-    U16U16U16,
-    String
+    U16U16U16
 }
 
 impl Instruction {
@@ -107,12 +106,64 @@ impl Instruction {
             "RAND" => Ok(Instruction::RAND),
             "WAIT" => Ok(Instruction::WAIT),
             "CLRS" => Ok(Instruction::CLRS),
-            "LABEL" => Ok(Instruction::LABEL),
             _ => Err("Invalid instruction")
         }
     }
 
+    pub fn to_string(&self) -> &'static str {
+        use self::Instruction::*;
+
+        match self {
+            NOOP => "NOOP",
+            MVIX => "MVIX",
+            MVIY => "MVIY",
+            MVIT => "MVIT",
+            MVAX => "MVAX",
+            MVAY => "MVAY",
+            MVAT => "MVAT",
+            MVXA => "MVXA",
+            MVYA => "MVYA",
+            MVTA => "MVTA",
+            MVPA => "MVPA",
+            ADDX => "ADDX",
+            ADDY => "ADDY",
+            ADDT => "ADDT",
+            SUBX => "SUBX",
+            SUBY => "SUBY",
+            SUBT => "SUBT",
+            COPY => "COPY",
+            CPID => "CPID",
+            CPIR => "CPIR",
+            ADDI => "ADDI",
+            SUBI => "SUBI",
+            MULI => "MULI",
+            DIVI => "DIVI",
+            MODI => "MODI",
+            SWIZ => "SWIZ",
+            ANDI => "ANDI",
+            ORLI => "ORLI",
+            XORI => "XORI",
+            NEGI => "NEGI",
+            SHLI => "SHLI",
+            SHRI => "SHRI",
+            EQLS => "EQLS",
+            GRTR => "GRTR",
+            LESS => "LESS",
+            JUMP => "JUMP",
+            TJMP => "TJMP",
+            FJMP => "FJMP",
+            RJMP => "RJMP",
+            IJMP => "IJMP",
+            BANK => "BANK",
+            RAND => "RAND",
+            WAIT => "WAIT",
+            CLRS => "CLRS"
+        }
+    }
+
     pub fn get_arg_type(&self) -> ArgType {
+        use self::Instruction::*;
+
         match self {
             NOOP => ArgType::None,
             MVIX => ArgType::U8,
@@ -157,61 +208,13 @@ impl Instruction {
             BANK => ArgType::U8,
             RAND => ArgType::U8U8U16,
             WAIT => ArgType::None,
-            CLRS => ArgType::None,
-            LABEL=> ArgType::String,
-            _ => ArgType::None
+            CLRS => ArgType::None
         }
     }
 }
 
 impl fmt::Display for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            NOOP => write!(f, "NOOP"),
-            MVIX => write!(f, "MVIX"),
-            MVIY => write!(f, "MVIY"),
-            MVIT => write!(f, "MVIT"),
-            MVAX => write!(f, "MVAX"),
-            MVAY => write!(f, "MVAY"),
-            MVAT => write!(f, "MVAT"),
-            MVXA => write!(f, "MVXA"),
-            MVYA => write!(f, "MVYA"),
-            MVTA => write!(f, "MVTA"),
-            MVPA => write!(f, "MVPA"),
-            ADDX => write!(f, "ADDX"),
-            ADDY => write!(f, "ADDY"),
-            ADDT => write!(f, "ADDT"),
-            SUBX => write!(f, "SUBX"),
-            SUBY => write!(f, "SUBY"),
-            SUBT => write!(f, "SUBT"),
-            COPY => write!(f, "COPY"),
-            CPID => write!(f, "CPID"),
-            CPIR => write!(f, "CPIR"),
-            ADDI => write!(f, "ADDI"),
-            SUBI => write!(f, "SUBI"),
-            MULI => write!(f, "MULI"),
-            DIVI => write!(f, "DIVI"),
-            MODI => write!(f, "MODI"),
-            SWIZ => write!(f, "SWIZ"),
-            ANDI => write!(f, "ANDI"),
-            ORLI => write!(f, "ORLI"),
-            XORI => write!(f, "XORI"),
-            NEGI => write!(f, "NEGI"),
-            SHLI => write!(f, "SHLI"),
-            SHRI => write!(f, "SHRI"),
-            EQLS => write!(f, "EQLS"),
-            GRTR => write!(f, "GRTR"),
-            LESS => write!(f, "LESS"),
-            JUMP => write!(f, "JUMP"),
-            TJMP => write!(f, "TJMP"),
-            FJMP => write!(f, "FJMP"),
-            RJMP => write!(f, "RJMP"),
-            IJMP => write!(f, "IJMP"),
-            BANK => write!(f, "BANK"),
-            RAND => write!(f, "RAND"),
-            WAIT => write!(f, "WAIT"),
-            CLRS => write!(f, "CLRS"),
-            LABEL => write!(f, "LABEL")
-        }
+        write!(f, "{}", self.to_string())
     }
 }

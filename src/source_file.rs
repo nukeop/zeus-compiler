@@ -35,7 +35,12 @@ impl SourceFile {
     }
 
     pub fn tokenize(&mut self) -> Result<(), String> {
-        let lines: Vec<&str> = self.content.as_ref().unwrap().split("\n").collect();
+        let lines: Vec<&str> = self.content
+        .as_ref()
+        .unwrap()
+        .split("\n")
+        .filter(|line| !line.to_string().starts_with("#"))
+        .collect();
 
         for line in lines {
             let mut line_tokens = line
@@ -51,6 +56,12 @@ impl SourceFile {
                 self.tokens.push(parsed_token);
             }
         }
+
+        Ok(())
+    }
+
+    pub fn validate_correctness(&self) -> Result<(), String> {
+        //if self.tokens.is
 
         Ok(())
     }
