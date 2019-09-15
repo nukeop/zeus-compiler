@@ -23,4 +23,22 @@ impl ASTNode {
     pub fn add_token(&mut self, token: Token) {
         self.token = Some(token);
     }
+
+    pub fn build_tree(tokens: Vec<Token>) -> ASTNode {
+        let mut root = ASTNode::new(ASTNodeType::Root);
+
+        let mut iter = tokens.iter();
+        let mut current_token = iter.next();
+        while (current_token != None) {
+            let unwrapped_token = current_token.unwrap();
+            let mut node = ASTNode::new(ASTNodeType::Token);
+            match unwrapped_token {
+                Token::Label(_) => node.add_token(*unwrapped_token),
+                _ => {}
+            }
+            current_token = iter.next();
+        }
+
+        return root;
+    }
 }

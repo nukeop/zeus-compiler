@@ -1,7 +1,7 @@
 use std::fmt;
 use instruction::Instruction;
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Token {
     Instruction(Instruction),
     Argument(u16),
