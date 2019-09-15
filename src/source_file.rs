@@ -3,6 +3,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::File;
 
+use instruction::{ArgType, Instruction};
 use token::Token;
 
 pub struct SourceFile {
@@ -60,9 +61,15 @@ impl SourceFile {
         Ok(())
     }
 
-    pub fn validate_correctness(&self) -> Result<(), String> {
-        //if self.tokens.is
+    pub fn validate_instruction_args(&self, instr: &Instruction, index: usize) -> Result<(), String> {
+        let arg_type = instr.get_arg_type();
+        Ok(())
+    }
 
+    pub fn validate_correctness(&self) -> Result<(), String> {
+        if self.tokens.is_empty() {
+            return Err("No tokens, tokenize the source first".to_string());
+        }
         Ok(())
     }
 }

@@ -62,4 +62,11 @@ mod token_tests {
         let token = Token::from_value("start", &labels);
         assert_eq!(token, Token::LabelArg("start".to_string()));
     }
+
+    #[test]
+    fn create_token_invalid_label() {
+        let labels = vec!["start".to_string()];
+        let token = Token::from_value("invalid", &labels);
+        assert_eq!(token, Token::Invalid("invalid".to_string()));
+    }
 }

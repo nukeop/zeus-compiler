@@ -2,6 +2,7 @@
 extern crate log;
 extern crate clap;
 
+pub mod ast;
 pub mod init;
 pub mod instruction;
 pub mod ops;

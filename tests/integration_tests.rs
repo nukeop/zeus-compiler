@@ -124,5 +124,5 @@ mod integration_tests {
             Token::Instruction(Instruction::JUMP),
             Token::Argument(0x2000)
             ]);
-}
-}
+        }
+    }

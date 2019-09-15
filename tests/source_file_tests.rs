@@ -8,7 +8,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_basic() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("abc\ndef\nghi".to_string());
 
         let result = sf.tokenize().unwrap();
@@ -17,7 +17,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_instruction_noop() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("NOOP".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
@@ -29,7 +29,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_instruction_copy() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("COPY".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
@@ -41,7 +41,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_instruction_with_argument() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("MVIX 15".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
@@ -56,7 +56,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_instruction_with_two_arguments() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("COPY 15 0100".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
@@ -72,7 +72,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_label() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("start:".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
@@ -84,7 +84,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_jump() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content = Some("start:\nJUMP start".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
@@ -100,7 +100,7 @@ mod source_file_tests {
 
     #[test]
     fn tokenize_complex_source() {
-        let mut sf: SourceFile = SourceFile::new();
+        let mut sf = SourceFile::new();
         sf.content=Some("
         begin:
         MVIX 20
@@ -125,5 +125,24 @@ mod source_file_tests {
             Token::Argument(1234),
             Token::Argument(1236)
             ]);
+    }
+
+    #[test]
+    fn validate_correctness_no_tokens() {
+        let sf = SourceFile::new();
+        let result = sf.validate_correctness();
+        match result {
+            Ok(_) => assert!(false, "Error not returned"),
+            Err(_) => assert!(true)
+        }
+    }
+
+    #[test]
+    fn validate_correctness_one_instr() {
+        let mut sf = SourceFile::new();
+        sf.content = Some("MVIX start".to_string());
+        sf.tokenize().unwrap();
+        let result = sf.validate_correctness().unwrap();
+        assert_eq!(result, ());
     }
 }
