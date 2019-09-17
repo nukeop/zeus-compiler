@@ -1,6 +1,6 @@
 use std::fmt;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Instruction {
     NOOP,
     MVIX,
@@ -48,7 +48,7 @@ pub enum Instruction {
     CLRS
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum ArgType {
     None,
     U8,

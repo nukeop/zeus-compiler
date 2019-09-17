@@ -69,4 +69,28 @@ mod token_tests {
         let token = Token::from_value("invalid", &labels);
         assert_eq!(token, Token::Invalid("invalid".to_string()));
     }
+
+    #[test]
+    fn copy_token_instr() {
+        let labels = vec![];
+        let token = Token::from_value("CPID", &labels);
+        let copied = Token::from_token(&token);
+        assert_eq!(copied, Token::Instruction(Instruction::CPID));
+    }
+
+    #[test]
+    fn copy_token_arg() {
+        let labels = vec![];
+        let token = Token::from_value("128", &labels);
+        let copied = Token::from_token(&token);
+        assert_eq!(copied, Token::Argument(128));
+    }
+
+    #[test]
+    fn copy_token_label() {
+        let labels = vec![];
+        let token = Token::from_value("loop:", &labels);
+        let copied = Token::from_token(&token);
+        assert_eq!(copied, Token::Label("loop".to_string()));
+    }
 }

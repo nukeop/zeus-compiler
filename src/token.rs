@@ -48,6 +48,16 @@ impl Token {
         Token::Invalid(value.to_string())
     }
 
+    pub fn from_token(token: &Token) -> Token {
+        match token {
+            Token::Instruction(instr) => Token::Instruction(*instr),
+            Token::Argument(arg) => Token::Argument(*arg),
+            Token::Label(label) => Token::Label(label.as_str().to_string()),
+            Token::LabelArg(label_arg) => Token::LabelArg(label_arg.as_str().to_string()),
+            Token::Invalid(content) => Token::Invalid(content.as_str().to_string())
+        }
+    }
+
     pub fn is_label(&self) -> bool {
         if let Token::Label(_) = self {
             return true
