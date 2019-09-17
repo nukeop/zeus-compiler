@@ -10,8 +10,7 @@ mod ast_tests {
     fn new_node() {
         let labels = vec![];
         let token = Token::from_value("NOOP", &labels);
-        let mut node = ASTNode::new(ASTNodeType::Token);
-        node.add_token(token);
+        let mut node = ASTNode::new(ASTNodeType::Token).add_token(token);
         assert_eq!(node.token.unwrap(), Token::from_value("NOOP", &labels));
     }
 
