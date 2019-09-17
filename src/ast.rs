@@ -30,32 +30,40 @@ impl ASTNode {
 
     pub fn build_tree(tokens: Vec<Token>) -> ASTNode {
         let mut root = ASTNode::new(ASTNodeType::Root);
+        let mut current: usize = 0;
 
-        let mut iter = tokens.iter();
-        let mut current_token = iter.next();
-        while (current_token != None) {
-            let owned_token = Token::from_token(current_token.unwrap());
-            let node = ASTNode::new(ASTNodeType::Token).add_token(owned_token);
-
-            println!("{}", node);
-            current_token = iter.next();
-        }
+        let node = ASTNode::walk(&tokens, current);
+        root.children = vec![node];
 
         return root;
+    }
+
+    pub fn walk(tokens: &Vec<Token>, current: usize) -> ASTNode {
+        match &tokens[current] {
+            Token::Instruction(instr) => ASTNode::new(ASTNodeType::Token)
+            .add_token(Token::from_token(&tokens[current])),
+            Token::Argument(arg) => ASTNode::new(ASTNodeType::Token)
+            .add_token(Token::from_token(&tokens[current])),
+            Token::Label(arg) => ASTNode::new(ASTNodeType::Token)
+            .add_token(Token::from_token(&tokens[current])),
+            Token::LabelArg(arg) => ASTNode::new(ASTNodeType::Token)
+            .add_token(Token::from_token(&tokens[current])),
+            _ => ASTNode::new(ASTNodeType::Token)
+        }
     }
 }
 
 impl fmt::Display for ASTNodeType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ASTNodeType::Root => write!(f, "ASTNodeType::Root"),
-            ASTNodeType::Token => write!(f, "ASTNodeType::Token")
+            ASTNodeType::Root => write!(f, "Root"),
+            ASTNodeType::Token => write!(f, "Token")
         }
     }
 }
 
 impl fmt::Display for ASTNode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "ASTNode::{}", self.node_type)
+        write!(f, "{}::{}", self.node_type, self.token.as_ref().unwrap())
     }
 }

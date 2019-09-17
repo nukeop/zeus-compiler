@@ -142,7 +142,11 @@ mod source_file_tests {
         let mut sf = SourceFile::new();
         sf.content = Some("MVIX start".to_string());
         sf.tokenize().unwrap();
-        let result = sf.validate_correctness().unwrap();
-        assert_eq!(result, ());
+        let result = sf.validate_correctness();
+        if let Err(_) = result {
+            assert!(true);
+        } else {
+            assert!(false);
+        }
     }
 }

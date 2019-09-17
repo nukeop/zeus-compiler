@@ -64,6 +64,13 @@ impl Token {
         }
         false
     }
+
+    pub fn is_valid(&self) -> bool {
+        if let Token::Invalid(_) = self {
+            return false
+        }
+        true
+    }
 }
 
 impl fmt::Display for Token {

@@ -33,5 +33,6 @@ mod ast_tests {
         ".to_string());
         sf.tokenize().unwrap();
         let tree = ASTNode::build_tree(sf.tokens);
+        println!("{:?}", tree);
     }
 }

@@ -61,15 +61,16 @@ impl SourceFile {
         Ok(())
     }
 
-    pub fn validate_instruction_args(&self, instr: &Instruction, index: usize) -> Result<(), String> {
-        let arg_type = instr.get_arg_type();
-        Ok(())
-    }
-
     pub fn validate_correctness(&self) -> Result<(), String> {
         if self.tokens.is_empty() {
             return Err("No tokens, tokenize the source first".to_string());
         }
+        for token in &self.tokens {
+            if !token.is_valid() {
+                return Err(format!("Invalid source code token: {}", token))
+            }
+        }
+
         Ok(())
     }
 }
