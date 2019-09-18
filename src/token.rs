@@ -1,5 +1,6 @@
 use std::fmt;
 use instruction::Instruction;
+use util::ByteVec;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Token {
@@ -8,6 +9,12 @@ pub enum Token {
     Label(String),
     LabelArg(String),
     Invalid(String)
+}
+
+pub enum CompilationResult {
+    Bytes(Vec<u8>),
+    Label(String),
+    LabelArg(String)
 }
 
 impl Token {
@@ -70,6 +77,17 @@ impl Token {
             return false
         }
         true
+    }
+
+    pub fn compile(&self) -> Result<CompilationResult, String> {
+        match self {
+            Token::Instruction(instr) => Ok(CompilationResult::Bytes(instr.compile())),
+            Token::Argument(arg) => Ok(CompilationResult::Bytes(arg.as_u8_vec())),
+            Token::Label(label) => Ok(CompilationResult::Label(label.as_str().to_string())),
+            Token::LabelArg(label) => Ok(CompilationResult::LabelArg(label.as_str().to_string())),
+            Token::Invalid(content) => Err(format!("Invalid token: {}", content).to_string()),
+            _ => Err("Unrecognized token type".to_string())
+        }
     }
 }
 

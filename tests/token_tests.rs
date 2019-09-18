@@ -5,7 +5,7 @@ extern crate zeus_compiler;
 #[cfg(test)]
 mod token_tests {
     use zeus_compiler::instruction::Instruction;
-    use zeus_compiler::token::Token;
+    use zeus_compiler::token::{CompilationResult, Token};
 
     #[test]
     fn create_token() {
@@ -92,5 +92,89 @@ mod token_tests {
         let token = Token::from_value("loop:", &labels);
         let copied = Token::from_token(&token);
         assert_eq!(copied, Token::Label("loop".to_string()));
+    }
+
+    #[test]
+    fn compile_token_instr() {
+        let labels = vec![];
+        let token = Token::from_value("NOOP", &labels);
+        let compiled = token.compile().unwrap();
+        if let CompilationResult::Bytes(values) = compiled {
+            assert_eq!(values, vec![0x00]);
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn compile_token_instr_swiz() {
+        let labels = vec![];
+        let token = Token::from_value("SWIZ", &labels);
+        let compiled = token.compile().unwrap();
+        if let CompilationResult::Bytes(values) = compiled {
+            assert_eq!(values, vec![0x19]);
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn compile_token_arg_u8() {
+        let labels = vec![];
+        let token = Token::from_value("127", &labels);
+        let compiled = token.compile().unwrap();
+        if let CompilationResult::Bytes(values) = compiled {
+            assert_eq!(values, vec![127, 0]);
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn compile_token_arg_u16() {
+        let labels = vec![];
+        let token = Token::from_value("0xDEAD", &labels);
+        let compiled = token.compile().unwrap();
+        if let CompilationResult::Bytes(values) = compiled {
+            assert_eq!(values, vec![0xAD, 0xDE]);
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn compile_token_label() {
+        let labels = vec![];
+        let token = Token::from_value("point:", &labels);
+        let compiled = token.compile().unwrap();
+        if let CompilationResult::Label(label) = compiled {
+            assert_eq!(label, "point");
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn compile_token_label_arg() {
+        let labels = vec!["here".to_string()];
+        let token = Token::from_value("here", &labels);
+        let compiled = token.compile().unwrap();
+        if let CompilationResult::LabelArg(label) = compiled {
+            assert_eq!(label, "here".to_string());
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn compile_token_invalid() {
+        let labels = vec![];
+        let token = Token::from_value("qwerty", &labels);
+        let compiled = token.compile();
+        if let Err(_) = compiled {
+            assert!(true);
+        } else {
+            assert!(false, "Error not returned for an invalid token");
+        }
     }
 }

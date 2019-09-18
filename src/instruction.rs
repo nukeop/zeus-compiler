@@ -211,6 +211,57 @@ impl Instruction {
             CLRS => ArgType::None
         }
     }
+
+    pub fn compile(&self) -> Vec<u8> {
+        use self::Instruction::*;
+
+        match self {
+            NOOP => vec![0x00],
+            MVIX => vec![0x01],
+            MVIY => vec![0x02],
+            MVIT => vec![0x03],
+            MVAX => vec![0x04],
+            MVAY => vec![0x05],
+            MVAT => vec![0x06],
+            MVXA => vec![0x07],
+            MVYA => vec![0x08],
+            MVTA => vec![0x09],
+            MVPA => vec![0x0A],
+            ADDX => vec![0x0B],
+            ADDY => vec![0x0C],
+            ADDT => vec![0x0D],
+            SUBX => vec![0x0E],
+            SUBY => vec![0x0F],
+            SUBT => vec![0x10],
+            COPY => vec![0x11],
+            CPID => vec![0x12],
+            CPIR => vec![0x13],
+            ADDI => vec![0x14],
+            SUBI => vec![0x15],
+            MULI => vec![0x16],
+            DIVI => vec![0x17],
+            MODI => vec![0x18],
+            SWIZ => vec![0x19],
+            ANDI => vec![0x1A],
+            ORLI => vec![0x1B],
+            XORI => vec![0x1C],
+            NEGI => vec![0x1D],
+            SHLI => vec![0x1E],
+            SHRI => vec![0x1F],
+            EQLS => vec![0x20],
+            GRTR => vec![0x21],
+            LESS => vec![0x22],
+            JUMP => vec![0x23],
+            TJMP => vec![0x24],
+            FJMP => vec![0x25],
+            RJMP => vec![0x26],
+            IJMP => vec![0x27],
+            BANK => vec![0x28],
+            RAND => vec![0x29],
+            WAIT => vec![0x2A],
+            CLRS => vec![0x2B]
+        }
+    }
 }
 
 impl fmt::Display for Instruction {

@@ -32,24 +32,7 @@ impl ASTNode {
         let mut root = ASTNode::new(ASTNodeType::Root);
         let mut current: usize = 0;
 
-        let node = ASTNode::walk(&tokens, current);
-        root.children = vec![node];
-
         return root;
-    }
-
-    pub fn walk(tokens: &Vec<Token>, current: usize) -> ASTNode {
-        match &tokens[current] {
-            Token::Instruction(instr) => ASTNode::new(ASTNodeType::Token)
-            .add_token(Token::from_token(&tokens[current])),
-            Token::Argument(arg) => ASTNode::new(ASTNodeType::Token)
-            .add_token(Token::from_token(&tokens[current])),
-            Token::Label(arg) => ASTNode::new(ASTNodeType::Token)
-            .add_token(Token::from_token(&tokens[current])),
-            Token::LabelArg(arg) => ASTNode::new(ASTNodeType::Token)
-            .add_token(Token::from_token(&tokens[current])),
-            _ => ASTNode::new(ASTNodeType::Token)
-        }
     }
 }
 
