@@ -49,7 +49,7 @@ mod source_file_tests {
             sf.tokens,
             vec![
             Token::Instruction(Instruction::MVIX),
-            Token::Argument(15)
+            Token::ArgumentU8(15)
             ]
         );
     }
@@ -57,15 +57,15 @@ mod source_file_tests {
     #[test]
     fn tokenize_instruction_with_two_arguments() {
         let mut sf = SourceFile::new();
-        sf.content = Some("COPY 15 0100".to_string());
+        sf.content = Some("COPY 15 0x0100".to_string());
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(
             sf.tokens,
             vec![
             Token::Instruction(Instruction::COPY),
-            Token::Argument(15),
-            Token::Argument(100)
+            Token::ArgumentU8(15),
+            Token::ArgumentU16(0x0100)
             ]
         );
     }
@@ -114,16 +114,16 @@ mod source_file_tests {
         assert_eq!(sf.tokens, vec![
             Token::Label("begin".to_string()),
             Token::Instruction(Instruction::MVIX),
-            Token::Argument(20),
+            Token::ArgumentU8(20),
             Token::Instruction(Instruction::MVIY),
-            Token::Argument(50),
+            Token::ArgumentU8(50),
             Token::Instruction(Instruction::COPY),
-            Token::Argument(1),
-            Token::Argument(1030),
+            Token::ArgumentU8(1),
+            Token::ArgumentU16(1030),
             Token::Label("test".to_string()),
             Token::Instruction(Instruction::CPID),
-            Token::Argument(1234),
-            Token::Argument(1236)
+            Token::ArgumentU16(1234),
+            Token::ArgumentU16(1236)
             ]);
     }
 
@@ -148,5 +148,35 @@ mod source_file_tests {
         } else {
             assert!(false);
         }
+    }
+
+    #[test]
+    fn compile_program_jump_to_label() {
+        let mut sf = SourceFile::new();
+        sf.content = Some("
+        start:
+        JUMP start
+        ".to_string());
+        sf.tokenize().unwrap();
+        let result = sf.compile().unwrap();
+        assert_eq!(result, vec![0x23, 0x00, 0x20]);
+    }
+
+    #[test]
+    fn compile_program_jump_to_label_later() {
+        let mut sf = SourceFile::new();
+        sf.content = Some("
+        MVIX 10
+        MVIY 20
+        start:
+        MVIT 30
+        JUMP start
+        ".to_string());
+        sf.tokenize().unwrap();
+        let result = sf.compile().unwrap();
+        assert_eq!(
+            result,
+            vec![0x01, 0x0A, 0x02, 0x14, 0x03, 0x1E, 0x23, 0x20, 0x20]
+        );
     }
 }

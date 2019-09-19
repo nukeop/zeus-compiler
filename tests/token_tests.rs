@@ -32,21 +32,21 @@ mod token_tests {
     fn create_token_arg() {
         let labels = vec![];
         let token = Token::from_value("123", &labels);
-        assert_eq!(token, Token::Argument(123));
+        assert_eq!(token, Token::ArgumentU8(123));
     }
 
     #[test]
     fn create_token_arg_hex_u8() {
         let labels = vec![];
         let token = Token::from_value("0xDE", &labels);
-        assert_eq!(token, Token::Argument(222));
+        assert_eq!(token, Token::ArgumentU16(222));
     }
 
     #[test]
     fn create_token_arg_hex_u16() {
         let labels = vec![];
         let token = Token::from_value("0xDEAD", &labels);
-        assert_eq!(token, Token::Argument(57005));
+        assert_eq!(token, Token::ArgumentU16(57005));
     }
 
     #[test]
@@ -83,7 +83,7 @@ mod token_tests {
         let labels = vec![];
         let token = Token::from_value("128", &labels);
         let copied = Token::from_token(&token);
-        assert_eq!(copied, Token::Argument(128));
+        assert_eq!(copied, Token::ArgumentU8(128));
     }
 
     #[test]
@@ -124,7 +124,7 @@ mod token_tests {
         let token = Token::from_value("127", &labels);
         let compiled = token.compile().unwrap();
         if let CompilationResult::Bytes(values) = compiled {
-            assert_eq!(values, vec![127, 0]);
+            assert_eq!(values, vec![127]);
         } else {
             assert!(false);
         }

@@ -5,7 +5,8 @@ use util::ByteVec;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Token {
     Instruction(Instruction),
-    Argument(u16),
+    ArgumentU16(u16),
+    ArgumentU8(u8),
     Label(String),
     LabelArg(String),
     Invalid(String)
@@ -30,13 +31,17 @@ impl Token {
                 16
             );
             if let Ok(parsed) = argument_hex {
-                return Token::Argument(parsed);
+                return Token::ArgumentU16(parsed);
             }
         }
 
         let argument = value.parse::<u16>();
         if let Ok(parsed) = argument {
-            return Token::Argument(parsed);
+            if parsed < 256 {
+                return Token::ArgumentU8(parsed as u8);
+            } else {
+                return Token::ArgumentU16(parsed as u16);
+            }
         }
 
         let last_char_result = value.chars().last();
@@ -58,7 +63,8 @@ impl Token {
     pub fn from_token(token: &Token) -> Token {
         match token {
             Token::Instruction(instr) => Token::Instruction(*instr),
-            Token::Argument(arg) => Token::Argument(*arg),
+            Token::ArgumentU16(arg) => Token::ArgumentU16(*arg),
+            Token::ArgumentU8(arg) => Token::ArgumentU8(*arg),
             Token::Label(label) => Token::Label(label.as_str().to_string()),
             Token::LabelArg(label_arg) => Token::LabelArg(label_arg.as_str().to_string()),
             Token::Invalid(content) => Token::Invalid(content.as_str().to_string())
@@ -82,7 +88,8 @@ impl Token {
     pub fn compile(&self) -> Result<CompilationResult, String> {
         match self {
             Token::Instruction(instr) => Ok(CompilationResult::Bytes(instr.compile())),
-            Token::Argument(arg) => Ok(CompilationResult::Bytes(arg.as_u8_vec())),
+            Token::ArgumentU16(arg) => Ok(CompilationResult::Bytes(arg.as_u8_vec())),
+            Token::ArgumentU8(arg) => Ok(CompilationResult::Bytes(vec![*arg])),
             Token::Label(label) => Ok(CompilationResult::Label(label.as_str().to_string())),
             Token::LabelArg(label) => Ok(CompilationResult::LabelArg(label.as_str().to_string())),
             Token::Invalid(content) => Err(format!("Invalid token: {}", content).to_string()),
@@ -95,7 +102,8 @@ impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Token::Instruction(instr) => write!(f, "Token::Instruction({})", instr),
-            Token::Argument(arg) => write!(f, "Token::Argument({})", arg),
+            Token::ArgumentU16(arg) => write!(f, "Token::ArgumentU16({})", arg),
+            Token::ArgumentU8(arg) => write!(f, "Token::ArgumentU8({})", arg),
             Token::Label(label) => write!(f, "Token::Label({})", label),
             Token::LabelArg(arg) => write!(f, "Token::LabelArg({})", arg),
             Token::Invalid(str) => write!(f, "Token::Invalid({})", str)

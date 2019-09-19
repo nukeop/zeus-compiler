@@ -4,6 +4,7 @@ use std::io::BufReader;
 use std::fs::File;
 
 use token::{CompilationResult, Token};
+use util::ByteVec;
 
 pub struct SourceFile {
     path: Option<String>,
@@ -48,7 +49,7 @@ impl SourceFile {
         .collect();
 
         for line in lines {
-            let mut line_tokens = line
+            let line_tokens = line
             .trim()
             .split(" ")
             .filter(|token| token.len() > 0);
@@ -92,14 +93,19 @@ impl SourceFile {
             match compiled_token {
                 CompilationResult::Bytes(values) => {
                     let compiled_token_values: Vec<u8> = values.iter().cloned().collect();
-                    current_pointer.wrapping_add(compiled_token_values.len() as u16);
+                    current_pointer = current_pointer.wrapping_add(8*compiled_token_values.len() as u16);
                     program.extend(compiled_token_values);
                 },
                 CompilationResult::Label(label) => {
                     labels.push(JumpDestination::new(label, current_pointer));
                 },
                 CompilationResult::LabelArg(labelArg) => {
-                    
+                    let matching_dest = labels.iter().find(|dest| dest.label == labelArg);
+                    if let Some(dest) = matching_dest {
+                        let bytes = dest.address.as_u8_vec();
+                        current_pointer = current_pointer.wrapping_add(8*bytes.len() as u16);
+                        program.extend(dest.address.as_u8_vec());
+                    }
                 }
             }
         }
