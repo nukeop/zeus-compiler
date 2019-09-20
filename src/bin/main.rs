@@ -14,23 +14,19 @@ fn main() {
     let source_file = args.value_of("source").unwrap_or("source.zeus");
     info!("Source file: {}", source_file);
 
-
     let target = args.value_of("target").unwrap_or("program.zeus");
     info!("Target file: {}", target);
 
     let mut source = SourceFile::new();
     source.load(source_file.to_string()).unwrap();
+    source.tokenize().unwrap();
+    let compiled = source.compile().unwrap();
 
     let version = Version::new(0, 1, 0);
     let mut program = Program::new(version);
-//     let lines = source.lines.unwrap();
-//     for mut line in lines {
-//         let compiled = line.to_compiled().unwrap();
-//         for byte in compiled {
-//             program.bytes.push(byte);
-//         }
-//     }
-//
-//     program.to_file(target.to_string()).expect("Could not save the
-// compiled program");
+    program.bytes = compiled;
+    program.to_file(target.to_string()).expect(
+        "Could not save the
+        compiled program",
+    );
 }

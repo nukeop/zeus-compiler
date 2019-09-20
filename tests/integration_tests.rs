@@ -9,7 +9,7 @@ mod integration_tests {
     #[test]
     fn tokenize_example_intro() {
         let mut sf = SourceFile::new();
-        sf.load("./examples/intro.source".to_string());
+        sf.load("./examples/intro.source".to_string()).unwrap();
         let result = sf.tokenize().unwrap();
         assert_eq!(result, ());
         assert_eq!(sf.tokens, vec![
